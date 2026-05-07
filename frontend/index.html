@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RentChain — Rental Houses on Blockchain</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>RentChain</h1>
+      <p class="tagline">A trust-less rental marketplace on Ethereum.</p>
+    </div>
+    <div class="wallet">
+      <span id="account" class="account">Not connected</span>
+      <button id="connectBtn" class="primary">Connect MetaMask</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card-section">
+      <h2>List your property</h2>
+      <form id="listForm" class="form-row">
+        <input id="location" placeholder="Location (e.g. BTM Layout, 2BHK)" required />
+        <input id="description" placeholder="Short description" required />
+        <input id="rent" type="number" step="0.0001" min="0" placeholder="Rent / month (ETH)" required />
+        <button type="submit" class="primary">List Property</button>
+      </form>
+    </section>
+
+    <section class="card-section">
+      <div class="row-between">
+        <h2>Available properties</h2>
+        <button id="refreshBtn" class="ghost">Refresh</button>
+      </div>
+      <div id="properties" class="grid"></div>
+      <p id="emptyState" class="muted">Connect MetaMask to load properties.</p>
+    </section>
+
+    <section class="card-section">
+      <h2>Your earnings</h2>
+      <p>Withdrawable balance: <strong><span id="balance">0</span> ETH</strong></p>
+      <button id="withdrawBtn" class="primary">Withdraw</button>
+    </section>
+
+    <p id="status" class="status"></p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="contract-info.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

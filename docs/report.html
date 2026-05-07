@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>RentChain — Project Report</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 11pt;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  h1, h2, h3 { color: #0d3b8e; margin: 0; }
+  h1 { font-size: 26pt; letter-spacing: -0.5pt; }
+  h2 {
+    font-size: 16pt;
+    margin-top: 22pt;
+    margin-bottom: 8pt;
+    border-bottom: 2pt solid #0d3b8e;
+    padding-bottom: 4pt;
+  }
+  h3 { font-size: 12pt; margin-top: 12pt; margin-bottom: 4pt; }
+
+  p, li { margin: 4pt 0; }
+
+  ul, ol { padding-left: 18pt; }
+
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 8mm;
+    page-break-after: always;
+  }
+
+  .cover .title {
+    font-size: 38pt;
+    font-weight: 700;
+    color: #0d3b8e;
+    line-height: 1.1;
+    margin-bottom: 12pt;
+  }
+
+  .cover .subtitle {
+    font-size: 14pt;
+    color: #555;
+    margin-bottom: 60pt;
+  }
+
+  .cover .meta {
+    font-size: 11pt;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  .cover .meta strong { color: #0d3b8e; }
+
+  .pill {
+    display: inline-block;
+    background: #e6efff;
+    color: #0d3b8e;
+    padding: 2pt 10pt;
+    border-radius: 999px;
+    font-size: 9pt;
+    margin-right: 4pt;
+    margin-bottom: 4pt;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+
+  th, td {
+    text-align: left;
+    border: 1pt solid #d0d0d0;
+    padding: 6pt 8pt;
+    vertical-align: top;
+  }
+
+  th {
+    background: #0d3b8e;
+    color: white;
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) td { background: #f6f8fc; }
+
+  code, pre {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    background: #f1f3f7;
+    border-radius: 3pt;
+    padding: 1pt 4pt;
+    font-size: 9.5pt;
+    color: #0d3b8e;
+  }
+
+  pre {
+    display: block;
+    padding: 8pt 10pt;
+    border: 1pt solid #e0e3eb;
+    overflow: auto;
+    white-space: pre-wrap;
+    color: #1a1a1a;
+  }
+
+  .callout {
+    border-left: 4pt solid #0d3b8e;
+    background: #f5f8ff;
+    padding: 8pt 12pt;
+    margin: 10pt 0;
+    border-radius: 0 4pt 4pt 0;
+  }
+
+  .callout.warn {
+    border-left-color: #b8860b;
+    background: #fff8e6;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12pt;
+    margin: 10pt 0;
+  }
+
+  .card {
+    border: 1pt solid #d6dae3;
+    border-radius: 6pt;
+    padding: 10pt 12pt;
+    background: white;
+  }
+
+  .card h3 { color: #0d3b8e; margin-top: 0; }
+
+  .arch {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 9pt;
+    background: #f8f9fc;
+    border: 1pt solid #d6dae3;
+    border-radius: 6pt;
+    padding: 12pt;
+    white-space: pre;
+    line-height: 1.4;
+  }
+
+  .qa {
+    border: 1pt solid #d6dae3;
+    border-radius: 4pt;
+    padding: 8pt 10pt;
+    margin: 6pt 0;
+    background: #fafbfd;
+    page-break-inside: avoid;
+  }
+
+  .qa .q { font-weight: 600; color: #0d3b8e; margin-bottom: 4pt; }
+  .qa .a { color: #1a1a1a; }
+
+  .small { font-size: 9pt; color: #666; }
+
+  .page-break { page-break-before: always; }
+
+  ol.steps { padding-left: 22pt; }
+  ol.steps li { margin-bottom: 6pt; }
+
+  .footer {
+    position: fixed;
+    bottom: 8mm;
+    left: 16mm;
+    right: 16mm;
+    font-size: 8pt;
+    color: #888;
+    text-align: center;
+    border-top: 1pt solid #e0e0e0;
+    padding-top: 4pt;
+  }
+</style>
+</head>
+<body>
+
+<!-- =================== COVER PAGE =================== -->
+<section class="cover">
+  <div class="title">RentChain</div>
+  <div class="subtitle">A blockchain-based rental house marketplace.</div>
+
+  <div class="meta">
+    <p><strong>Project type:</strong> Mini Project — Blockchain Technology</p>
+    <p><strong>Course:</strong> 6th Semester, BE Computer Science &amp; Engineering</p>
+    <p><strong>Institution:</strong> Visvesvaraya Technological University (VTU)</p>
+    <p><strong>Tech stack:</strong>
+      <span class="pill">Solidity 0.8.24</span>
+      <span class="pill">Hardhat 2</span>
+      <span class="pill">ethers.js v6</span>
+      <span class="pill">MetaMask</span>
+      <span class="pill">HTML / CSS / JS</span>
+    </p>
+  </div>
+</section>
+
+<!-- =================== 1. ABSTRACT =================== -->
+<h2>1. Abstract</h2>
+<p>
+  Traditional rental websites such as 99acres, NoBroker, and MagicBricks rely on a
+  central server owned by a single company. The company controls the data, decides
+  what gets shown, and brokers in the middle introduce extra cost and trust issues.
+</p>
+<p>
+  <strong>RentChain</strong> replaces that central server with an
+  <em>Ethereum smart contract</em>. House owners list their properties on the
+  blockchain. Tenants pay rent in cryptocurrency directly to the smart contract,
+  which then credits the owner&rsquo;s account inside the contract. The owner can
+  withdraw the collected rent at any time. Nobody — not even the developer — can
+  secretly alter or delete a listing or steal the rent.
+</p>
+<p>
+  The project is intentionally scoped small so it can be demonstrated end-to-end
+  in under two minutes. It illustrates the three core ideas of any blockchain
+  course: <strong>immutable on-chain storage</strong>,
+  <strong>smart-contract logic</strong>, and
+  <strong>trust-less peer-to-peer value transfer</strong>.
+</p>
+
+<!-- =================== 2. WHAT IS BLOCKCHAIN? =================== -->
+<h2>2. What is a blockchain (in 30 seconds)?</h2>
+<p>
+  A blockchain is a shared, append-only database that is copied across thousands
+  of computers around the world. Once data is written into a block, every copy of
+  the chain has it; no single party can secretly change or remove it. <strong>Ethereum</strong>
+  is a blockchain that adds <em>smart contracts</em> — small programs that live on
+  the chain and run when called. Solidity is the language we write them in.
+</p>
+<p>
+  In this project we don&rsquo;t use the real Ethereum network — we use a
+  <strong>local Hardhat node</strong>, which is a simulator running on the laptop.
+  The simulator pretends to be Ethereum and gives us 20 fake test accounts, each
+  pre-loaded with 10000 fake ETH. The same Solidity code would run unchanged on
+  the real Ethereum mainnet.
+</p>
+
+<!-- =================== 3. SYSTEM ARCHITECTURE =================== -->
+<h2>3. System architecture</h2>
+
+<div class="arch">+--------------------+        +----------------------+
+|    Browser DApp    |        |   MetaMask Wallet    |
+|  index.html / app.js&nbsp;<------>&nbsp;(holds private key,   |
+|  ethers.js (CDN)   |        |    signs every tx)   |
++----------+---------+        +-----------+----------+
+           |                              |
+           |    JSON-RPC over HTTP        |
+           |    http://127.0.0.1:8545     |
+           v                              v
++-------------------------------------------------------+
+|         Local Ethereum network (Hardhat node)         |
+|                                                       |
+|     +------------------------------------------+      |
+|     |   RentalMarket.sol  (deployed contract)  |      |
+|     |   - properties[id]      <- on-chain DB   |      |
+|     |   - balances[owner]     <- pull payment  |      |
+|     |   - listProperty / rentProperty / ...    |      |
+|     +------------------------------------------+      |
++-------------------------------------------------------+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Smart contract — <code>RentalMarket.sol</code></h3>
+    <p>The brain of the system. Stores all properties and balances. Enforces all rules: only the owner can withdraw, you can&rsquo;t rent your own property, exact rent must be paid, etc.</p>
+  </div>
+  <div class="card">
+    <h3>Hardhat node</h3>
+    <p>A local Ethereum simulator running on the laptop. Provides the JSON-RPC endpoint at <code>127.0.0.1:8545</code> and 20 funded test accounts.</p>
+  </div>
+  <div class="card">
+    <h3>MetaMask</h3>
+    <p>Browser extension that holds the user&rsquo;s private key. Every time the contract is called, MetaMask pops up and asks the user to confirm and sign.</p>
+  </div>
+  <div class="card">
+    <h3>Frontend</h3>
+    <p>Plain HTML, CSS, and JavaScript. Uses the <strong>ethers.js</strong> library (loaded from a CDN) to talk to the contract through MetaMask.</p>
+  </div>
+</div>
+
+<!-- =================== 4. CONTRACT API =================== -->
+<h2 class="page-break">4. Smart-contract functions</h2>
+
+<table>
+  <tr><th>Function</th><th>Who calls it</th><th>What it does</th></tr>
+  <tr>
+    <td><code>listProperty(location, description, rentPerMonthWei)</code></td>
+    <td>Owner</td>
+    <td>Stores a new property in <code>properties[id]</code>. The caller becomes the owner.</td>
+  </tr>
+  <tr>
+    <td><code>rentProperty(id, months) <em>payable</em></code></td>
+    <td>Tenant</td>
+    <td>Tenant sends exact <code>rent &times; months</code> ETH along with the call. The contract records the tenant and the lease end date, and credits the owner&rsquo;s balance.</td>
+  </tr>
+  <tr>
+    <td><code>endLease(id)</code></td>
+    <td>Owner</td>
+    <td>After the lease end date passes, the owner ends the lease and the property becomes vacant.</td>
+  </tr>
+  <tr>
+    <td><code>unlist(id)</code></td>
+    <td>Owner</td>
+    <td>Removes a vacant property from the listing.</td>
+  </tr>
+  <tr>
+    <td><code>withdraw()</code></td>
+    <td>Owner</td>
+    <td>Owner pulls collected rent out into their own wallet (pull-payment pattern).</td>
+  </tr>
+  <tr>
+    <td><code>getAllProperties()</code> <span class="small">view</span></td>
+    <td>Anyone</td>
+    <td>Returns the full list of properties — used by the frontend to render cards.</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>Why &ldquo;pull payment&rdquo; instead of forwarding rent automatically?</strong><br>
+  If the contract tried to send ETH to the owner inside <code>rentProperty()</code>, a malicious owner could write a contract that re-enters and drains the system (a re-entrancy attack), or simply reject the transfer to break future rentals. Storing the amount in <code>balances[owner]</code> and making the owner call <code>withdraw()</code> later is the textbook safe pattern.
+</div>
+
+<!-- =================== 5. JOURNEY OF A RENT =================== -->
+<h2>5. The journey of a rent payment (step-by-step)</h2>
+
+<ol class="steps">
+  <li>Tenant clicks <strong>Rent</strong> in the browser.</li>
+  <li>Frontend (<code>app.js</code>) calls <code>contract.rentProperty(id, months, &#123; value &#125;)</code> using ethers.js.</li>
+  <li>Ethers.js asks MetaMask: &ldquo;please sign this transaction&rdquo;. MetaMask pops up and shows the gas fee and the ETH being sent.</li>
+  <li>User clicks <strong>Confirm</strong>. MetaMask signs the transaction with the user&rsquo;s private key and forwards it to the Hardhat node.</li>
+  <li>Hardhat node validates the transaction, runs the <code>rentProperty</code> code, updates contract storage, and includes the transaction in a new block.</li>
+  <li>The contract emits a <code>PropertyRented</code> event.</li>
+  <li>The frontend hears the confirmation, calls <code>getAllProperties()</code> again, and re-renders the card as &ldquo;Rented until …&rdquo;.</li>
+</ol>
+
+<!-- =================== 6. RUN ORDER =================== -->
+<h2>6. How to run the project</h2>
+
+<p>You need three terminals open in the project folder.</p>
+
+<h3>Terminal 1 — start the local blockchain</h3>
+<pre>npx hardhat node</pre>
+<p class="small">Prints 20 funded test accounts. Leave this running.</p>
+
+<h3>Terminal 2 — deploy the contract</h3>
+<pre>npx hardhat run scripts/deploy.js --network localhost</pre>
+<p class="small">Outputs <code>RentalMarket deployed to: 0x...</code> and writes the address + ABI into <code>frontend/contract-info.js</code>.</p>
+
+<h3>Terminal 3 — serve the website</h3>
+<pre>npx http-server frontend -p 5500 -c-1 -o</pre>
+<p class="small">Opens <code>http://localhost:5500</code> in the browser.</p>
+
+<h3>One-time MetaMask setup</h3>
+<ol class="steps">
+  <li>Networks &rarr; Add network manually &rarr; Name <code>Hardhat Local</code>, RPC URL <code>http://127.0.0.1:8545</code>, Chain ID <code>31337</code>, Currency <code>ETH</code>.</li>
+  <li>Account icon &rarr; Import account &rarr; paste a private key from Terminal 1.</li>
+  <li>Switch MetaMask to <code>Hardhat Local</code>.</li>
+</ol>
+
+<!-- =================== 7. DEMO FLOW =================== -->
+<h2 class="page-break">7. Live demo flow (~ 90 seconds)</h2>
+
+<table>
+  <tr><th style="width:30%">Action</th><th>What to say</th></tr>
+  <tr>
+    <td>Click <strong>Connect MetaMask</strong></td>
+    <td>&ldquo;I&rsquo;m connecting as the <em>owner</em> of a property. The wallet address is my identity — no signup, no email.&rdquo;</td>
+  </tr>
+  <tr>
+    <td>List <em>BTM Layout, 2BHK</em>, rent <code>0.01</code> ETH</td>
+    <td>&ldquo;The browser sends a transaction to the smart contract. MetaMask signs it. Once mined, the property is permanently on-chain.&rdquo;</td>
+  </tr>
+  <tr>
+    <td>Switch MetaMask to a second imported account</td>
+    <td>&ldquo;Now I&rsquo;m a different person — a <em>tenant</em>. Same website, same contract, different wallet.&rdquo;</td>
+  </tr>
+  <tr>
+    <td>Click <strong>Rent</strong> &rarr; confirm 0.01 ETH</td>
+    <td>&ldquo;I&rsquo;m sending 0.01 ETH directly to the contract. The contract automatically credits the owner and records me as the tenant.&rdquo;</td>
+  </tr>
+  <tr>
+    <td>Switch back to owner account &rarr; click <strong>Withdraw</strong></td>
+    <td>&ldquo;Back to the owner. I pull my earnings out — owner-to-tenant, peer-to-peer, enforced entirely by code.&rdquo;</td>
+  </tr>
+</table>
+
+<!-- =================== 8. VIVA Q&A =================== -->
+<h2 class="page-break">8. Possible viva questions</h2>
+
+<h3>Concept questions</h3>
+
+<div class="qa">
+  <div class="q">Q. What is a blockchain?</div>
+  <div class="a">A shared, append-only database replicated across many computers. Once data is in a block, no single party can secretly change it.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What is a smart contract?</div>
+  <div class="a">A program stored on the blockchain. It has its own storage and functions. It runs when someone sends a transaction calling one of its functions, and the result is recorded permanently in a new block.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. Why use blockchain for renting houses instead of a normal database?</div>
+  <div class="a">Three reasons. (1) No central admin can secretly delete or alter listings. (2) Anyone can verify ownership and rent payments by looking at the chain. (3) The contract enforces the rules — the user doesn&rsquo;t have to trust a company.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What is Ethereum?</div>
+  <div class="a">A blockchain that, unlike Bitcoin, supports smart contracts. We write contracts in Solidity, compile them to EVM bytecode, and deploy them to the network.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What is gas?</div>
+  <div class="a">A fee paid in ETH to the network for executing a transaction. Bigger or more complex transactions consume more gas.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What is MetaMask?</div>
+  <div class="a">A browser-extension wallet that holds the user&rsquo;s private key, displays the account balance, and signs every transaction the website asks for. The website never sees the private key.</div>
+</div>
+
+<h3>Code questions</h3>
+
+<div class="qa">
+  <div class="q">Q. What is <code>msg.sender</code>?</div>
+  <div class="a">The Ethereum address of whoever called the function. Solidity&rsquo;s built-in identity check — we use it to verify ownership and to record who is renting.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What does the <code>payable</code> keyword do?</div>
+  <div class="a">Marks a function as one that can receive ETH along with the call. <code>rentProperty</code> is <code>payable</code> because the tenant pays rent at the same time as calling it.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. Why use the pull-payment pattern for <code>withdraw</code>?</div>
+  <div class="a">Sending ETH automatically inside <code>rentProperty</code> exposes the contract to re-entrancy attacks and stuck-funds DoS. Storing the amount in <code>balances[owner]</code> and letting the owner call <code>withdraw()</code> on their own is the standard secure pattern.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What does <code>30 days</code> mean in Solidity?</div>
+  <div class="a">A built-in time unit equal to <code>30 &times; 24 &times; 60 &times; 60</code> seconds. We use it to compute the lease end timestamp.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What are events used for?</div>
+  <div class="a">Events are logs the contract emits when state changes. The frontend listens for them so the UI can refresh after a transaction is mined.</div>
+</div>
+
+<h3>Setup questions</h3>
+
+<div class="qa">
+  <div class="q">Q. Is this real ETH? Did you spend money?</div>
+  <div class="a">No. We&rsquo;re running on a local Hardhat node — a developer simulator. The 10000 ETH is fake test currency that only exists on the laptop.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. How would you deploy this on real Ethereum?</div>
+  <div class="a">Add a <code>sepolia</code> entry in <code>hardhat.config.js</code> with an Infura/Alchemy RPC URL and a funded private key, then run the same deploy script with <code>--network sepolia</code>. The contract code does not change.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What is Hardhat?</div>
+  <div class="a">A development environment for Ethereum. It compiles Solidity, runs a local test blockchain, deploys contracts, and runs unit tests.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What is ethers.js?</div>
+  <div class="a">A JavaScript library that wraps Ethereum&rsquo;s JSON-RPC API. It connects to MetaMask, formats transactions, and decodes contract responses.</div>
+</div>
+
+<h3>Tricky questions</h3>
+
+<div class="qa">
+  <div class="q">Q. What happens if the rent amount is wrong?</div>
+  <div class="a">The contract has <code>require(msg.value == total, "Send exact rent amount");</code> so the entire transaction reverts. No state changes, no ETH is taken.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. What stops the owner from renting their own property?</div>
+  <div class="a">The line <code>require(p.owner != msg.sender, "Owner cannot rent own property");</code> in <code>rentProperty</code>.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. Can two tenants rent the same property at once?</div>
+  <div class="a">No. <code>require(p.currentTenant == address(0) || block.timestamp &gt;= p.leaseEnd, "Already rented");</code> blocks a second rental until the existing lease ends.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q. How is the data structured on-chain?</div>
+  <div class="a">A <code>mapping(uint256 =&gt; Property)</code> from property id to a struct, plus a <code>mapping(address =&gt; uint256)</code> for owner balances. Mappings are Solidity&rsquo;s key-value store.</div>
+</div>
+
+<!-- =================== 9. TESTING =================== -->
+<h2 class="page-break">9. Testing</h2>
+
+<p>The contract is covered by 8 unit tests written with Mocha + Chai (via <code>hardhat-toolbox</code>). They are run with:</p>
+<pre>npx hardhat test</pre>
+
+<table>
+  <tr><th>#</th><th>Test</th><th>Branch covered</th></tr>
+  <tr><td>1</td><td>lists a property</td><td>happy path of <code>listProperty</code></td></tr>
+  <tr><td>2</td><td>rejects listing with zero rent</td><td><code>require(rentPerMonthWei &gt; 0)</code></td></tr>
+  <tr><td>3</td><td>rents and credits owner balance</td><td>happy path of <code>rentProperty</code></td></tr>
+  <tr><td>4</td><td>rejects renting your own property</td><td><code>require(p.owner != msg.sender)</code></td></tr>
+  <tr><td>5</td><td>rejects wrong rent amount</td><td><code>require(msg.value == total)</code></td></tr>
+  <tr><td>6</td><td>rejects renting an already-rented property</td><td>active-lease check</td></tr>
+  <tr><td>7</td><td>lets owner withdraw earnings</td><td>happy path of <code>withdraw</code></td></tr>
+  <tr><td>8</td><td>rejects withdraw when nothing to withdraw</td><td><code>require(amount &gt; 0)</code></td></tr>
+</table>
+
+<!-- =================== 10. ADVANTAGES =================== -->
+<h2 class="page-break">10. Advantages of RentChain</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>1. No middleman</h3>
+    <p>Rent goes straight from tenant to owner through the contract. No broker fee, no platform commission (which is typically 1 month&rsquo;s rent on apps like NoBroker Pay or 99acres).</p>
+  </div>
+  <div class="card">
+    <h3>2. Tamper-proof listings</h3>
+    <p>A central platform can secretly delete, hide, or reorder listings to favour paid promotions. On a blockchain, every listing is permanent and visible to everyone equally.</p>
+  </div>
+  <div class="card">
+    <h3>3. Verifiable payments</h3>
+    <p>Every rent transaction is a public event on-chain. The tenant has a permanent on-chain receipt; the owner has permanent proof of payment. No &ldquo;he said, she said&rdquo; disputes.</p>
+  </div>
+  <div class="card">
+    <h3>4. No platform downtime</h3>
+    <p>Centralized platforms can go down (or pivot, or shut down) and take all the data with them. The contract keeps running as long as Ethereum exists.</p>
+  </div>
+  <div class="card">
+    <h3>5. Code enforces the rules</h3>
+    <p>Owners can&rsquo;t take the rent and refuse to mark the lease &mdash; the contract did that automatically. Tenants can&rsquo;t double-rent the same flat &mdash; the contract blocks it.</p>
+  </div>
+  <div class="card">
+    <h3>6. Identity is just a wallet</h3>
+    <p>No signup, no email, no OTP. The wallet address is the identity. Useful for users who want privacy.</p>
+  </div>
+  <div class="card">
+    <h3>7. Global reach</h3>
+    <p>Anyone with MetaMask can interact, regardless of country or bank. ETH transfers don&rsquo;t care about borders or banking hours.</p>
+  </div>
+  <div class="card">
+    <h3>8. Open and auditable</h3>
+    <p>The contract source code is public. Anyone can verify the rules. Compare this to closed-source rental apps where pricing logic is hidden.</p>
+  </div>
+</div>
+
+<!-- =================== 11. COMPARISON =================== -->
+<h2>11. Comparison with current market apps</h2>
+
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>NoBroker</th>
+    <th>99acres</th>
+    <th>MagicBricks</th>
+    <th>RentChain</th>
+  </tr>
+  <tr>
+    <td>Where listings are stored</td>
+    <td>Their server</td>
+    <td>Their server</td>
+    <td>Their server</td>
+    <td><strong>On Ethereum, public</strong></td>
+  </tr>
+  <tr>
+    <td>Can the platform secretly hide a listing?</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td><strong>No</strong></td>
+  </tr>
+  <tr>
+    <td>Broker commission</td>
+    <td>Zero (claim) but premium fee for direct contact</td>
+    <td>Up to 1 month&rsquo;s rent</td>
+    <td>Up to 1 month&rsquo;s rent</td>
+    <td><strong>Zero. Only gas fee (~&#x20B9;5).</strong></td>
+  </tr>
+  <tr>
+    <td>Listing fee for owners</td>
+    <td>Free / Premium plans</td>
+    <td>Premium plans (paid)</td>
+    <td>Premium plans (paid)</td>
+    <td><strong>Free. Only one-time gas fee.</strong></td>
+  </tr>
+  <tr>
+    <td>Rent payment processing</td>
+    <td>Through bank / NoBroker Pay</td>
+    <td>Outside the platform</td>
+    <td>Outside the platform</td>
+    <td><strong>On-chain in ETH (instant)</strong></td>
+  </tr>
+  <tr>
+    <td>Identity / KYC</td>
+    <td>Phone OTP + KYC</td>
+    <td>Email + phone</td>
+    <td>Email + phone</td>
+    <td><strong>Wallet address (anonymous)</strong></td>
+  </tr>
+  <tr>
+    <td>Disputes settled by</td>
+    <td>Customer support team</td>
+    <td>Customer support team</td>
+    <td>Customer support team</td>
+    <td><strong>Smart-contract logic</strong></td>
+  </tr>
+  <tr>
+    <td>Server downtime risk</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td><strong>None as long as Ethereum runs</strong></td>
+  </tr>
+  <tr>
+    <td>Open source</td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td><strong>Yes</strong></td>
+  </tr>
+  <tr>
+    <td>Available 24&times;7 globally</td>
+    <td>India only</td>
+    <td>India only</td>
+    <td>India only</td>
+    <td><strong>Anywhere in the world</strong></td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>Honest trade-offs (mention these too — examiners like balanced answers):</strong>
+  <ul>
+    <li>RentChain users need ETH and a wallet, which is a bigger learning curve than just downloading the NoBroker app.</li>
+    <li>Gas fees on real Ethereum can spike during peak times. Solution: deploy on a Layer-2 chain like <em>Polygon</em> where fees are typically a fraction of a rupee.</li>
+    <li>If the user loses their private key, the wallet (and any rent collected) is lost. Centralized apps support password reset.</li>
+    <li>Real-world rent disputes (broken pipes, deposit refunds) still need a human; the contract only enforces the digital rules.</li>
+  </ul>
+</div>
+
+<!-- =================== 12. IMPROVEMENTS =================== -->
+<h2 class="page-break">12. Improvements / Future scope</h2>
+
+<p>The current build is intentionally minimal. The following are concrete, demonstrable extensions that can be added without redesigning the system:</p>
+
+<table>
+  <tr><th>Improvement</th><th>What it adds</th><th>Why it matters</th></tr>
+  <tr>
+    <td>Security deposit + escrow</td>
+    <td>Tenant pays a refundable deposit at rent time; the contract holds it until the lease ends, then refunds or forfeits based on owner action.</td>
+    <td>Mirrors how real-world rental agreements work and removes deposit-refund disputes entirely.</td>
+  </tr>
+  <tr>
+    <td>IPFS image storage</td>
+    <td>Property photos uploaded to IPFS; only the content hash is stored on-chain.</td>
+    <td>Listings become visual without making the contract storage expensive.</td>
+  </tr>
+  <tr>
+    <td>Reputation / rating system</td>
+    <td>After a lease ends, both sides can rate each other. Ratings stored on-chain against the wallet address.</td>
+    <td>Replaces the &ldquo;trust score&rdquo; that centralized platforms calculate.</td>
+  </tr>
+  <tr>
+    <td>Stablecoin rent (e.g. USDC)</td>
+    <td>Pay rent in a USD-pegged stablecoin instead of volatile ETH.</td>
+    <td>Removes price-volatility risk so rent is a predictable amount each month.</td>
+  </tr>
+  <tr>
+    <td>Layer-2 deployment</td>
+    <td>Deploy the same contract to Polygon or Arbitrum.</td>
+    <td>Gas fees drop from $0.30 to fractions of a cent, and confirmation is near-instant.</td>
+  </tr>
+  <tr>
+    <td>Auto-recurring rent</td>
+    <td>A scheduled job (e.g. Chainlink Automation) calls the contract monthly to deduct rent from the tenant.</td>
+    <td>True &ldquo;set-and-forget&rdquo; rent &mdash; matches how a standing instruction with a bank works.</td>
+  </tr>
+  <tr>
+    <td>KYC layer</td>
+    <td>Optional verified-identity NFT linked to the wallet, issued after KYC.</td>
+    <td>Lets owners restrict rentals to verified tenants without giving up the on-chain trust model.</td>
+  </tr>
+  <tr>
+    <td>Dispute arbitration</td>
+    <td>A neutral third-party arbitrator (or DAO) can be specified per lease to resolve real-world disputes.</td>
+    <td>Bridges the gap between code-enforced rules and physical-world problems.</td>
+  </tr>
+  <tr>
+    <td>Public testnet deployment</td>
+    <td>Deploy the same contract to Sepolia or Polygon Mumbai.</td>
+    <td>Gives a shareable URL anyone in the world can try, no Hardhat setup required.</td>
+  </tr>
+</table>
+
+<!-- =================== 11. GLOSSARY =================== -->
+<h2>13. Glossary (quick reference)</h2>
+
+<table>
+  <tr><th>Term</th><th>Meaning</th></tr>
+  <tr><td>Blockchain</td><td>An append-only ledger replicated across many machines.</td></tr>
+  <tr><td>Ethereum</td><td>A blockchain platform that supports smart contracts.</td></tr>
+  <tr><td>Smart contract</td><td>A program that lives on the blockchain.</td></tr>
+  <tr><td>Solidity</td><td>The programming language used to write Ethereum smart contracts.</td></tr>
+  <tr><td>EVM</td><td>Ethereum Virtual Machine — the runtime that executes smart contracts.</td></tr>
+  <tr><td>Wei</td><td>The smallest unit of ETH. 1 ETH = 10<sup>18</sup> wei.</td></tr>
+  <tr><td>Gas</td><td>The fee paid to run a transaction, measured in ETH.</td></tr>
+  <tr><td>Wallet</td><td>Software that holds a private key and signs transactions (e.g. MetaMask).</td></tr>
+  <tr><td>DApp</td><td>Decentralized application — a frontend backed by a smart contract.</td></tr>
+  <tr><td>Hardhat</td><td>A Node.js development framework for Ethereum.</td></tr>
+  <tr><td>ABI</td><td>Application Binary Interface — describes how to call a contract&rsquo;s functions from outside.</td></tr>
+  <tr><td>Pull payment</td><td>A pattern where the recipient withdraws funds themselves instead of having them auto-sent.</td></tr>
+</table>
+
+</body>
+</html>
